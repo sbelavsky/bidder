@@ -1,18 +1,17 @@
 package com.optimax.auction;
 
-import com.optimax.bidder.Bidder;
-import com.optimax.product.DefaultProduct;
+import com.optimax.participant.AuctionParticipant;
 import com.optimax.product.Product;
 
 public class TwoPartiesBlindBidAuction implements Auction<TwoPartiesAuctionResult> {
 
-    private final Bidder firstBidder;
-    private final Bidder secondBidder;
+    private final AuctionParticipant firstParty;
+    private final AuctionParticipant secondParty;
     private final Product product;
 
-    public TwoPartiesBlindBidAuction(Product product, Bidder firstBidder, Bidder secondBidder) {
-        this.firstBidder = firstBidder;
-        this.secondBidder = secondBidder;
+    public TwoPartiesBlindBidAuction(Product product, AuctionParticipant firstParty, AuctionParticipant secondParty) {
+        this.firstParty = firstParty;
+        this.secondParty = secondParty;
         this.product = product;
     }
 
@@ -20,17 +19,47 @@ public class TwoPartiesBlindBidAuction implements Auction<TwoPartiesAuctionResul
     public AuctionResult<TwoPartiesAuctionResult> run() {
         final var productQuantity = product.getQuantity();
         if (productQuantity == 0 || productQuantity == 1) {
-            //todo find the winner
-            return null;
+            if (firstParty.getProduct().getQuantity() > secondParty.getProduct().getQuantity()) {
+                return TwoPartiesAuctionResult.FIRST_BIDDER_WON;
+            }
+            if (secondParty.getProduct().getQuantity() > firstParty.getProduct().getQuantity()) {
+                return TwoPartiesAuctionResult.SECOND_BIDDER_WON;
+            }
+            if (firstParty.getCash() > secondParty.getCash()) {
+                return TwoPartiesAuctionResult.FIRST_BIDDER_WON;
+            }
+            if (secondParty.getCash() > firstParty.getCash()) {
+                return TwoPartiesAuctionResult.SECOND_BIDDER_WON;
+            }
+            return TwoPartiesAuctionResult.TIE;
         }
-        var firstBidderBid = firstBidder.placeBid();
-        var secondBidderBid = secondBidder.placeBid();
-        if (firstBidderBid > secondBidderBid) {
-            firstBidder.init(first);
+
+        //todo stop when there is no money
+        var firstPartyBid = firstParty.bid();
+        var secondPartyBid = secondParty.bid();
+        if (firstPartyBid > secondPartyBid) {
+            final var winProduct = this.product.copy().setQuantity(2);
             return new TwoPartiesBlindBidAuction(
-                    new DefaultProduct(productQuantity - 2),
-                    firstBidder,
-                    secondBidder).run();
+                    product.extract(winProduct),
+                    firstParty.payCash(firstPartyBid).addProduct(winProduct),
+                    secondParty.payCash(secondPartyBid))
+                    .run();
         }
+        if (secondPartyBid > firstPartyBid) {
+            final var winProduct = this.product.copy().setQuantity(2);
+            return new TwoPartiesBlindBidAuction(
+                    product.extract(winProduct),
+                    firstParty.payCash(firstPartyBid),
+                    secondParty.payCash(secondPartyBid).addProduct(winProduct))
+                    .run();
+        }
+        //tie
+        final var winProduct = this.product.copy().setQuantity(2);
+        final var tieProduct = this.product.copy().setQuantity(1);
+        return new TwoPartiesBlindBidAuction(
+                this.product.extract(winProduct),
+                firstParty.payCash(firstPartyBid).addProduct(tieProduct),
+                secondParty.payCash(secondPartyBid).addProduct(tieProduct))
+                .run();
     }
 }

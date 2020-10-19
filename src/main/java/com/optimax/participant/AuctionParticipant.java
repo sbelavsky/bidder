@@ -1,9 +1,16 @@
 package com.optimax.participant;
 
-public interface AuctionParticipant {
+import com.optimax.Copyable;
+import com.optimax.product.Product;
+
+public interface AuctionParticipant extends Copyable<AuctionParticipant> {
     int bid();
 
     int getCash();
 
-    int getProductQuntity();
+    Product getProduct();
+
+    AuctionParticipant payCash(int amount);
+
+    AuctionParticipant addProduct(Product product);
 }
