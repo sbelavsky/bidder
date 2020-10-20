@@ -13,7 +13,7 @@ public class RandomBidStrategy implements BidStrategy {
 
     @Override
     public int bid() {
-        var cash = bidder.getCash();
+        var cash = bidder.getBidderAccount().getCash();
         if (cash == 0) {
             return 0;
         }

@@ -34,7 +34,6 @@ public class TwoPartiesBlindBidAuction implements Auction<TwoPartiesAuctionResul
             return TwoPartiesAuctionResult.TIE;
         }
 
-        //todo stop when there is no money
         var firstPartyBid = firstParty.bid();
         var secondPartyBid = secondParty.bid();
         if (firstPartyBid > secondPartyBid) {

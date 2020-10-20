@@ -1,24 +1,20 @@
 package com.optimax.participant;
 
-import com.optimax.account.BidderAccount;
-import com.optimax.bidder.Bidder;
+import com.optimax.bidder.AbstractBidder;
 import com.optimax.product.Product;
 
 import java.util.Objects;
 
 public class DefaultAuctionParticipant implements AuctionParticipant {
 
-    private final Bidder bidder;
-    private final BidderAccount bidderAccount;
+    private final AbstractBidder bidder;
 
-    public DefaultAuctionParticipant(Bidder bidder, BidderAccount bidderAccount) {
+    public DefaultAuctionParticipant(AbstractBidder bidder) {
         this.bidder = bidder;
-        this.bidderAccount = bidderAccount;
     }
 
     private DefaultAuctionParticipant(DefaultAuctionParticipant target) {
-        this.bidder = target.bidder;
-        this.bidderAccount = target.bidderAccount;
+        this.bidder = target.bidder.copy();
     }
 
     public int bid() {
@@ -26,22 +22,22 @@ public class DefaultAuctionParticipant implements AuctionParticipant {
     }
 
     public int getCash() {
-        return bidderAccount.getCash();
+        return bidder.getBidderAccount().getCash();
     }
 
     @Override
     public Product getProduct() {
-        return bidderAccount.getProduct();
+        return bidder.getBidderAccount().getProduct();
     }
 
     @Override
     public AuctionParticipant payCash(int amount) {
-        return new DefaultAuctionParticipant(bidder, bidderAccount.payCash(amount));
+        return new DefaultAuctionParticipant(bidder.pay(amount));
     }
 
     @Override
     public AuctionParticipant addProduct(Product product) {
-        return new DefaultAuctionParticipant(bidder, bidderAccount.addProduct(product));
+        return new DefaultAuctionParticipant(bidder.addProduct(product));
     }
 
     @Override
@@ -49,13 +45,12 @@ public class DefaultAuctionParticipant implements AuctionParticipant {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DefaultAuctionParticipant that = (DefaultAuctionParticipant) o;
-        return Objects.equals(bidder, that.bidder) &&
-                Objects.equals(bidderAccount, that.bidderAccount);
+        return Objects.equals(bidder, that.bidder);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bidder, bidderAccount);
+        return Objects.hash(bidder);
     }
 
     @Override

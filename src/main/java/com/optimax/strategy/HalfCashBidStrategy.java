@@ -12,9 +12,9 @@ public class HalfCashBidStrategy implements BidStrategy {
 
     @Override
     public int bid() {
-        var cash = bidder.getCash();
+        var cash = bidder.getBidderAccount().getCash();
         if (cash == 0 || cash == 1) {
-            return cash;
+            return 0;
         }
         return cash / 2;
     }

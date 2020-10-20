@@ -1,8 +1,9 @@
 package com.optimax.account;
 
+import com.optimax.Copyable;
 import com.optimax.product.Product;
 
-public interface BidderAccount {
+public interface BidderAccount extends Copyable<BidderAccount> {
     Product getProduct();
 
     int getCash();

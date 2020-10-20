@@ -13,6 +13,11 @@ public class DefaultBidderAccount implements BidderAccount {
         this.cash = cash;
     }
 
+    public DefaultBidderAccount(DefaultBidderAccount origin) {
+        this.product = origin.product.copy();
+        this.cash = origin.cash;
+    }
+
     @Override
     public Product getProduct() {
         return product;
@@ -45,5 +50,10 @@ public class DefaultBidderAccount implements BidderAccount {
     @Override
     public int hashCode() {
         return Objects.hash(product, cash);
+    }
+
+    @Override
+    public BidderAccount copy() {
+        return new DefaultBidderAccount(this);
     }
 }

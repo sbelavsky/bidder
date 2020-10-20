@@ -1,22 +1,33 @@
 package com.optimax.bidder;
 
+import com.optimax.Copyable;
+import com.optimax.account.BidderAccount;
+import com.optimax.exception.DoubleInitializationException;
 import com.optimax.exception.UninitializedException;
+import com.optimax.product.Product;
 import com.optimax.strategy.BidStrategy;
 
 import java.util.Objects;
 
-public abstract class AbstractBidder implements Bidder {
+public abstract class AbstractBidder implements Bidder, Copyable<AbstractBidder> {
 
-    private int quantity;
-    private int cash;
+    private final BidderAccount bidderAccount;
     private boolean initialized;
 
+    public AbstractBidder(BidderAccount bidderAccount) {
+        this.bidderAccount = bidderAccount;
+        init(bidderAccount.getProduct().getQuantity(), bidderAccount.getCash());
+    }
+
+    public AbstractBidder(AbstractBidder origin) {
+        this.bidderAccount = origin.bidderAccount.copy();
+        this.initialized = origin.initialized;
+    }
+
     public void init(int quantity, int cash) {
+        ensureUninitialized();
         validateCash(cash);
         validateQuantity(quantity);
-
-        this.quantity = quantity;
-        this.cash = cash;
         initialized = true;
     }
 
@@ -36,6 +47,12 @@ public abstract class AbstractBidder implements Bidder {
         }
     }
 
+    private void ensureUninitialized() {
+        if (initialized) {
+            throw new DoubleInitializationException("Bidder have been already initialized");
+        }
+    }
+
     private void validateQuantity(int quantity) {
         if (quantity < 0) {
             throw new IllegalArgumentException("product quantity cannot be below zero");
@@ -50,12 +67,12 @@ public abstract class AbstractBidder implements Bidder {
 
     abstract BidStrategy bidStrategy();
 
-    public int getQuantity() {
-        return quantity;
-    }
+    public abstract AbstractBidder pay(int cash);
 
-    public int getCash() {
-        return cash;
+    public abstract AbstractBidder addProduct(Product product);
+
+    public BidderAccount getBidderAccount() {
+        return bidderAccount.copy();
     }
 
     @Override
@@ -63,13 +80,12 @@ public abstract class AbstractBidder implements Bidder {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AbstractBidder that = (AbstractBidder) o;
-        return quantity == that.quantity &&
-                cash == that.cash &&
-                initialized == that.initialized;
+        return initialized == that.initialized &&
+                Objects.equals(bidderAccount, that.bidderAccount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(quantity, cash, initialized);
+        return Objects.hash(bidderAccount, initialized);
     }
 }
