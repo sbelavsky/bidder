@@ -16,7 +16,7 @@ class HalfCashBidder extends AbstractBidder {
     }
 
     @Override
-    BidStrategy bidStrategy() {
+    protected BidStrategy bidStrategy() {
         return new HalfCashBidStrategy(this);
     }
 

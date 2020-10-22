@@ -16,7 +16,7 @@ class RandomBidder extends AbstractBidder {
     }
 
     @Override
-    BidStrategy bidStrategy() {
+    protected BidStrategy bidStrategy() {
         return new RandomBidStrategy(this);
     }
 

@@ -1,7 +1,15 @@
 package com.optimax.auction;
 
+import com.optimax.auction.processor.BidsProcessorFactory;
+import com.optimax.auction.result.AuctionResult;
+import com.optimax.auction.result.TwoPartiesAuctionResult;
+import com.optimax.auction.result.provider.AuctionResultProviderFactory;
 import com.optimax.participant.AuctionParticipant;
 import com.optimax.product.Product;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class TwoPartiesBlindBidAuction implements Auction<TwoPartiesAuctionResult> {
 
@@ -17,48 +25,49 @@ public class TwoPartiesBlindBidAuction implements Auction<TwoPartiesAuctionResul
 
     @Override
     public AuctionResult<TwoPartiesAuctionResult> run() {
-        final var productQuantity = product.getQuantity();
-        if (productQuantity == 0 || productQuantity == 1) {
-            if (firstParty.getProduct().getQuantity() > secondParty.getProduct().getQuantity()) {
-                return TwoPartiesAuctionResult.FIRST_BIDDER_WON;
-            }
-            if (secondParty.getProduct().getQuantity() > firstParty.getProduct().getQuantity()) {
-                return TwoPartiesAuctionResult.SECOND_BIDDER_WON;
-            }
-            if (firstParty.getCash() > secondParty.getCash()) {
-                return TwoPartiesAuctionResult.FIRST_BIDDER_WON;
-            }
-            if (secondParty.getCash() > firstParty.getCash()) {
-                return TwoPartiesAuctionResult.SECOND_BIDDER_WON;
-            }
-            return TwoPartiesAuctionResult.TIE;
+        if (isAuctionFinished()) {
+            return result();
         }
+        return handleBids(putBidsSimultaneously());
+    }
 
-        var firstPartyBid = firstParty.bid();
-        var secondPartyBid = secondParty.bid();
-        if (firstPartyBid > secondPartyBid) {
-            final var winProduct = this.product.copy().setQuantity(2);
-            return new TwoPartiesBlindBidAuction(
-                    product.extract(winProduct),
-                    firstParty.payCash(firstPartyBid).addProduct(winProduct),
-                    secondParty.payCash(secondPartyBid))
-                    .run();
-        }
-        if (secondPartyBid > firstPartyBid) {
-            final var winProduct = this.product.copy().setQuantity(2);
-            return new TwoPartiesBlindBidAuction(
-                    product.extract(winProduct),
-                    firstParty.payCash(firstPartyBid),
-                    secondParty.payCash(secondPartyBid).addProduct(winProduct))
-                    .run();
-        }
-        //tie
-        final var winProduct = this.product.copy().setQuantity(2);
-        final var tieProduct = this.product.copy().setQuantity(1);
-        return new TwoPartiesBlindBidAuction(
-                this.product.extract(winProduct),
-                firstParty.payCash(firstPartyBid).addProduct(tieProduct),
-                secondParty.payCash(secondPartyBid).addProduct(tieProduct))
+    private int[] putBidsSimultaneously() {
+        final var firstBidCompletableFuture = CompletableFuture.supplyAsync(firstParty::bid);
+        final var secondBidCompletableFuture = CompletableFuture.supplyAsync(secondParty::bid);
+        CompletableFuture.allOf(firstBidCompletableFuture, secondBidCompletableFuture).join();
+        var firstPartyBid = firstBidCompletableFuture.join();
+        var secondPartyBid = secondBidCompletableFuture.join();
+        return new int[]{firstPartyBid, secondPartyBid};
+    }
+
+    private boolean isAuctionFinished() {
+        return product.getQuantity() == 0;
+    }
+
+    private TwoPartiesAuctionResult result() {
+        return AuctionResultProviderFactory
+                .createAuctionResultProvider(this)
+                .provide();
+    }
+
+    private AuctionResult<TwoPartiesAuctionResult> handleBids(int[] bids) {
+        final var firstPartyBid = bids[0];
+        final var secondPartyBid = bids[1];
+        firstParty.supplyBids(firstPartyBid, secondPartyBid);
+        secondParty.supplyBids(secondPartyBid, firstPartyBid);
+
+        return BidsProcessorFactory.createBidsProcessor(this)
+                .handleBids(firstPartyBid, secondPartyBid)
                 .run();
+    }
+
+    @Override
+    public List<AuctionParticipant> getParticipants() {
+        return Arrays.asList(firstParty, secondParty);
+    }
+
+    @Override
+    public Product getProduct() {
+        return product.copy();
     }
 }

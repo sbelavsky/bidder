@@ -16,7 +16,7 @@ class AlwaysZeroBidder extends AbstractBidder {
     }
 
     @Override
-    BidStrategy bidStrategy() {
+    protected BidStrategy bidStrategy() {
         return new AlwaysZeroBidStrategy();
     }
 

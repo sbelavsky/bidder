@@ -41,6 +41,16 @@ public abstract class AbstractBidder implements Bidder, Copyable<AbstractBidder>
         //todo display
     }
 
+    public abstract AbstractBidder pay(int cash);
+
+    public abstract AbstractBidder addProduct(Product product);
+
+    public BidderAccount getBidderAccount() {
+        return bidderAccount.copy();
+    }
+
+    protected abstract BidStrategy bidStrategy();
+
     private void ensureBidderIsInitialized() {
         if (!initialized) {
             throw new UninitializedException("Bidder is uninitialized. Call init() method first");
@@ -63,16 +73,6 @@ public abstract class AbstractBidder implements Bidder, Copyable<AbstractBidder>
         if (cash < 0) {
             throw new IllegalArgumentException("cash cannot be below zero");
         }
-    }
-
-    abstract BidStrategy bidStrategy();
-
-    public abstract AbstractBidder pay(int cash);
-
-    public abstract AbstractBidder addProduct(Product product);
-
-    public BidderAccount getBidderAccount() {
-        return bidderAccount.copy();
     }
 
     @Override

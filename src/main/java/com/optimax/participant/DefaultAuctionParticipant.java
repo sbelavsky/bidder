@@ -25,6 +25,10 @@ public class DefaultAuctionParticipant implements AuctionParticipant {
         return bidder.getBidderAccount().getCash();
     }
 
+    public void supplyBids(int own, int other) {
+        bidder.bids(own, other);
+    }
+
     @Override
     public Product getProduct() {
         return bidder.getBidderAccount().getProduct();
