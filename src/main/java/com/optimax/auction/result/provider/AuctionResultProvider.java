@@ -1,7 +1,5 @@
 package com.optimax.auction.result.provider;
 
-import com.optimax.auction.result.AuctionResult;
-
-public interface AuctionResultProvider<T extends AuctionResult<?>> {
+public interface AuctionResultProvider<T> {
     T provide();
 }

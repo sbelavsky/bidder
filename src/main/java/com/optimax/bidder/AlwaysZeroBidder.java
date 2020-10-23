@@ -7,8 +7,8 @@ import com.optimax.strategy.BidStrategy;
 
 class AlwaysZeroBidder extends AbstractBidder {
 
-    public AlwaysZeroBidder(BidderAccount bidderAccount) {
-        super(bidderAccount);
+    public AlwaysZeroBidder(String name, BidderAccount bidderAccount) {
+        super(name, bidderAccount);
     }
 
     public AlwaysZeroBidder(AbstractBidder origin) {
@@ -22,12 +22,12 @@ class AlwaysZeroBidder extends AbstractBidder {
 
     @Override
     public AbstractBidder pay(int cash) {
-        return new AlwaysZeroBidder(getBidderAccount().payCash(cash));
+        return new AlwaysZeroBidder(name, getBidderAccount().payCash(cash));
     }
 
     @Override
     public AbstractBidder addProduct(Product product) {
-        return new AlwaysZeroBidder(getBidderAccount().addProduct(product));
+        return new AlwaysZeroBidder(name, getBidderAccount().addProduct(product));
     }
 
     @Override

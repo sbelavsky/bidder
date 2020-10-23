@@ -10,4 +10,6 @@ public interface Product extends Copyable<Product> {
     Product add(Product product);
 
     Product extract(Product product);
+
+    boolean isEmpty();
 }

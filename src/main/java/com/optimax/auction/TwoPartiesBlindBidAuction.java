@@ -1,7 +1,6 @@
 package com.optimax.auction;
 
 import com.optimax.auction.processor.BidsProcessorFactory;
-import com.optimax.auction.result.AuctionResult;
 import com.optimax.auction.result.TwoPartiesAuctionResult;
 import com.optimax.auction.result.provider.AuctionResultProviderFactory;
 import com.optimax.participant.AuctionParticipant;
@@ -24,7 +23,7 @@ public class TwoPartiesBlindBidAuction implements Auction<TwoPartiesAuctionResul
     }
 
     @Override
-    public AuctionResult<TwoPartiesAuctionResult> run() {
+    public TwoPartiesAuctionResult run() {
         if (isAuctionFinished()) {
             return result();
         }
@@ -41,7 +40,7 @@ public class TwoPartiesBlindBidAuction implements Auction<TwoPartiesAuctionResul
     }
 
     private boolean isAuctionFinished() {
-        return product.getQuantity() == 0;
+        return product.isEmpty();
     }
 
     private TwoPartiesAuctionResult result() {
@@ -50,7 +49,7 @@ public class TwoPartiesBlindBidAuction implements Auction<TwoPartiesAuctionResul
                 .provide();
     }
 
-    private AuctionResult<TwoPartiesAuctionResult> handleBids(int[] bids) {
+    private TwoPartiesAuctionResult handleBids(int[] bids) {
         final var firstPartyBid = bids[0];
         final var secondPartyBid = bids[1];
         firstParty.supplyBids(firstPartyBid, secondPartyBid);

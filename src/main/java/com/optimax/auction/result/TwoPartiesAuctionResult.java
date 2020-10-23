@@ -1,10 +1,5 @@
 package com.optimax.auction.result;
 
-public enum TwoPartiesAuctionResult implements AuctionResult<TwoPartiesAuctionResult> {
-    FIRST_BIDDER_WON, SECOND_BIDDER_WON, TIE;
-
-    @Override
-    public TwoPartiesAuctionResult result() {
-        return this;
-    }
+public enum TwoPartiesAuctionResult {
+    FIRST_BIDDER_WON, SECOND_BIDDER_WON, TIE
 }

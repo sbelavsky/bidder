@@ -7,21 +7,26 @@ import com.optimax.exception.UninitializedException;
 import com.optimax.product.Product;
 import com.optimax.strategy.BidStrategy;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Objects;
 
 public abstract class AbstractBidder implements Bidder, Copyable<AbstractBidder> {
 
     private final BidderAccount bidderAccount;
+    protected final String name;
     private boolean initialized;
 
-    public AbstractBidder(BidderAccount bidderAccount) {
+    public AbstractBidder(String name, BidderAccount bidderAccount) {
         this.bidderAccount = bidderAccount;
+        this.name = name;
         init(bidderAccount.getProduct().getQuantity(), bidderAccount.getCash());
     }
 
     public AbstractBidder(AbstractBidder origin) {
         this.bidderAccount = origin.bidderAccount.copy();
         this.initialized = origin.initialized;
+        this.name = origin.name;
     }
 
     public void init(int quantity, int cash) {
@@ -38,7 +43,17 @@ public abstract class AbstractBidder implements Bidder, Copyable<AbstractBidder>
 
     public void bids(int own, int other) {
         ensureBidderIsInitialized();
-        //todo display
+        var output = String.format("[%s] Own bid: %d, other bid: %d \n", name, own, other);
+        var stream = outputStream();
+        try {
+            stream.write(output.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected OutputStream outputStream() {
+        return System.out;
     }
 
     public abstract AbstractBidder pay(int cash);

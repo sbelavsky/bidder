@@ -7,8 +7,8 @@ import com.optimax.strategy.RandomBidStrategy;
 
 class RandomBidder extends AbstractBidder {
 
-    public RandomBidder(BidderAccount bidderAccount) {
-        super(bidderAccount);
+    public RandomBidder(String name, BidderAccount bidderAccount) {
+        super(name, bidderAccount);
     }
 
     public RandomBidder(AbstractBidder origin) {
@@ -22,12 +22,12 @@ class RandomBidder extends AbstractBidder {
 
     @Override
     public AbstractBidder pay(int cash) {
-        return new RandomBidder(getBidderAccount().payCash(cash));
+        return new RandomBidder(name, getBidderAccount().payCash(cash));
     }
 
     @Override
     public AbstractBidder addProduct(Product product) {
-        return new RandomBidder(getBidderAccount().addProduct(product));
+        return new RandomBidder(name, getBidderAccount().addProduct(product));
     }
 
     @Override

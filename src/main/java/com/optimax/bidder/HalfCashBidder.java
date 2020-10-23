@@ -7,8 +7,8 @@ import com.optimax.strategy.HalfCashBidStrategy;
 
 class HalfCashBidder extends AbstractBidder {
 
-    public HalfCashBidder(BidderAccount bidderAccount) {
-        super(bidderAccount);
+    public HalfCashBidder(String name, BidderAccount bidderAccount) {
+        super(name, bidderAccount);
     }
 
     public HalfCashBidder(AbstractBidder origin) {
@@ -22,12 +22,12 @@ class HalfCashBidder extends AbstractBidder {
 
     @Override
     public AbstractBidder pay(int cash) {
-        return new HalfCashBidder(getBidderAccount().payCash(cash));
+        return new HalfCashBidder(name, getBidderAccount().payCash(cash));
     }
 
     @Override
     public AbstractBidder addProduct(Product product) {
-        return new HalfCashBidder(getBidderAccount().addProduct(product));
+        return new HalfCashBidder(name, getBidderAccount().addProduct(product));
     }
 
     @Override
