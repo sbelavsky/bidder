@@ -3,7 +3,7 @@ package com.optimax;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class Configuration {
+public class Messages {
     private static final ResourceBundle messages = ResourceBundle.getBundle("messages", Locale.ENGLISH);
 
     public static final String UNEXPECTED_COMPARISON = messages.getString("unexpected.comparison");
