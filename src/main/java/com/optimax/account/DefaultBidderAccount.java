@@ -14,8 +14,7 @@ public class DefaultBidderAccount implements BidderAccount {
     }
 
     public DefaultBidderAccount(DefaultBidderAccount origin) {
-        this.product = origin.product.copy();
-        this.cash = origin.cash;
+        this(origin.product.copy(), origin.cash);
     }
 
     @Override

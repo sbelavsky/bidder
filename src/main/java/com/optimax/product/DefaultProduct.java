@@ -6,11 +6,12 @@ public class DefaultProduct implements Product {
     private final int quantity;
 
     public DefaultProduct(int quantity) {
+        validateQuantity(quantity);
         this.quantity = quantity;
     }
 
     public DefaultProduct(DefaultProduct product) {
-        this.quantity = product.quantity;
+        this(product.getQuantity());
     }
 
     public int getQuantity() {
@@ -53,5 +54,11 @@ public class DefaultProduct implements Product {
     @Override
     public Product copy() {
         return new DefaultProduct(this);
+    }
+
+    private void validateQuantity(int quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("quantity cannot be negative");
+        }
     }
 }

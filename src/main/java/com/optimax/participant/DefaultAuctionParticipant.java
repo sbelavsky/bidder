@@ -14,7 +14,7 @@ public class DefaultAuctionParticipant implements AuctionParticipant {
     }
 
     private DefaultAuctionParticipant(DefaultAuctionParticipant target) {
-        this.bidder = target.bidder.copy();
+        this(target.bidder.copy());
     }
 
     public int bid() {
