@@ -1,5 +1,7 @@
 package com.optimax.product;
 
+import com.optimax.Configuration;
+
 import java.util.Objects;
 
 public class DefaultProduct implements Product {
@@ -58,7 +60,7 @@ public class DefaultProduct implements Product {
 
     private void validateQuantity(int quantity) {
         if (quantity < 0) {
-            throw new IllegalArgumentException("quantity cannot be negative");
+            throw new IllegalArgumentException(Configuration.PRODUCT_QUANTITY_BELOW_ZERO);
         }
     }
 }

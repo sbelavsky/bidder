@@ -1,5 +1,6 @@
 package com.optimax.bidder;
 
+import com.optimax.Configuration;
 import com.optimax.Copyable;
 import com.optimax.account.BidderAccount;
 import com.optimax.exception.DoubleInitializationException;
@@ -68,25 +69,25 @@ public abstract class AbstractBidder implements Bidder, Copyable<AbstractBidder>
 
     private void ensureBidderIsInitialized() {
         if (!initialized) {
-            throw new UninitializedException("Bidder is uninitialized. Call init() method first");
+            throw new UninitializedException(Configuration.BIDDER_UNINITIALIZED);
         }
     }
 
     private void ensureUninitialized() {
         if (initialized) {
-            throw new DoubleInitializationException("Bidder have been already initialized");
+            throw new DoubleInitializationException(Configuration.BIDDER_ALREADY_INITIALIZED);
         }
     }
 
     private void validateQuantity(int quantity) {
         if (quantity < 0) {
-            throw new IllegalArgumentException("product quantity cannot be below zero");
+            throw new IllegalArgumentException(Configuration.PRODUCT_QUANTITY_BELOW_ZERO);
         }
     }
 
     private void validateCash(int cash) {
         if (cash < 0) {
-            throw new IllegalArgumentException("cash cannot be below zero");
+            throw new IllegalArgumentException(Configuration.CASH_BELOW_ZERO);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.optimax.auction.result.provider;
 
+import com.optimax.Configuration;
 import com.optimax.auction.Auction;
 import com.optimax.auction.result.TwoPartiesAuctionResult;
 import com.optimax.participant.AuctionParticipant;
@@ -29,6 +30,6 @@ public class DefaultAuctionResultProvider implements AuctionResultProvider<TwoPa
                 return TwoPartiesAuctionResult.SECOND_BIDDER_WON;
             }
         }
-        throw new RuntimeException("unexpected comparison result");
+        throw new RuntimeException(Configuration.UNEXPECTED_COMPARISON);
     }
 }

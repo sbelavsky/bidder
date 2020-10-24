@@ -5,9 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
 
 class RandomBidderTest extends BaseBidderTest {
-    private final String name = "test";
     private RandomBidder test;
 
     @BeforeEach
@@ -22,15 +22,15 @@ class RandomBidderTest extends BaseBidderTest {
 
     @Test
     void pay() {
-        var updated = test.pay(50);
-        assertEquals(new RandomBidder(name, updatedCashBidderAccount), updated);
+        test.pay(payAmount);
+        verify(bidderAccount).payCash(payAmount);
 
     }
 
     @Test
     void addProduct() {
-        var updated = test.addProduct(product);
-        assertEquals(new RandomBidder(name, updatedProductBidderAccount), updated);
+        test.addProduct(product);
+        verify(bidderAccount).addProduct(product);
     }
 
     @Test
