@@ -3,6 +3,9 @@ package com.optimax;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * provides messages
+ */
 public class Messages {
     private static final ResourceBundle messages = ResourceBundle.getBundle("messages", Locale.ENGLISH);
 

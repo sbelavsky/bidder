@@ -4,6 +4,9 @@ import com.optimax.bidder.AbstractBidder;
 
 import java.util.Random;
 
+/**
+ * returns random bid within bidder's cash
+ */
 public class RandomBidStrategy implements BidStrategy {
     private final AbstractBidder bidder;
 

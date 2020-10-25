@@ -2,6 +2,9 @@ package com.optimax.strategy;
 
 import com.optimax.bidder.AbstractBidder;
 
+/**
+ * returns half of the bidder's cash
+ */
 public class HalfCashBidStrategy implements BidStrategy {
 
     private final AbstractBidder bidder;
@@ -13,9 +16,6 @@ public class HalfCashBidStrategy implements BidStrategy {
     @Override
     public int bid() {
         var cash = bidder.getBidderAccount().getCash();
-        if (cash == 0 || cash == 1) {
-            return 0;
-        }
         return cash / 2;
     }
 }

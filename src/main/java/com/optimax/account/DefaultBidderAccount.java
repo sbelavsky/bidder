@@ -4,15 +4,29 @@ import com.optimax.product.Product;
 
 import java.util.Objects;
 
+/**
+ * Default bidder's account implementation. Provides basic functionality
+ */
 public class DefaultBidderAccount implements BidderAccount {
     private final Product product;
     private final int cash;
 
+    /**
+     * Creates default bidder account
+     *
+     * @param product initial product value
+     * @param cash    initial cash value
+     */
     public DefaultBidderAccount(Product product, int cash) {
         this.product = product;
         this.cash = cash;
     }
 
+    /**
+     * Copy constructor
+     *
+     * @param origin is and account to be copied
+     */
     public DefaultBidderAccount(DefaultBidderAccount origin) {
         this(origin.product.copy(), origin.cash);
     }

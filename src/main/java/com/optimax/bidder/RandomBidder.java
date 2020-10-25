@@ -5,6 +5,9 @@ import com.optimax.product.Product;
 import com.optimax.strategy.BidStrategy;
 import com.optimax.strategy.RandomBidStrategy;
 
+/**
+ * uses random bid strategy
+ */
 class RandomBidder extends AbstractBidder {
 
     public RandomBidder(String name, BidderAccount bidderAccount) {

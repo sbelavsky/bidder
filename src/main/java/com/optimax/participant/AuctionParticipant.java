@@ -3,6 +3,11 @@ package com.optimax.participant;
 import com.optimax.Copyable;
 import com.optimax.product.Product;
 
+/**
+ * encapsulates bidder's logic
+ *
+ * @see com.optimax.bidder.AbstractBidder
+ */
 public interface AuctionParticipant extends Copyable<AuctionParticipant> {
     int bid();
 

@@ -5,6 +5,9 @@ import com.optimax.product.Product;
 import com.optimax.strategy.BidStrategy;
 import com.optimax.strategy.HalfCashBidStrategy;
 
+/**
+ * uses always half of the bidder's cash bid strategy
+ */
 class HalfCashBidder extends AbstractBidder {
 
     public HalfCashBidder(String name, BidderAccount bidderAccount) {

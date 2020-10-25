@@ -5,6 +5,9 @@ import com.optimax.product.Product;
 import com.optimax.strategy.AlwaysZeroBidStrategy;
 import com.optimax.strategy.BidStrategy;
 
+/**
+ * Uses always zero cash bid strategy
+ */
 class AlwaysZeroBidder extends AbstractBidder {
 
     public AlwaysZeroBidder(String name, BidderAccount bidderAccount) {

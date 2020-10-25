@@ -2,6 +2,9 @@ package com.optimax.product;
 
 import com.optimax.Copyable;
 
+/**
+ * Represents auction's product
+ */
 public interface Product extends Copyable<Product> {
     int getQuantity();
 
